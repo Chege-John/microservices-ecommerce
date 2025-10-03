@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import {
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -17,23 +12,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from './ui/form';
+import { Input } from './ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "./ui/button";
+} from '@/components/ui/select';
+import { Button } from './ui/button';
 
 const formSchema = z.object({
-  fullName: z
-    .string()
-    .min(2, { message: "Full name must be at least 2 characters!" })
-    .max(50),
-  email: z.string().email({ message: "Invalid email address!" }),
+  fullName: z.string().min(2, { message: 'Full name must be at least 2 characters!' }).max(50),
+  email: z.string().email({ message: 'Invalid email address!' }),
   phone: z.string().min(10).max(15),
   address: z.string().min(2),
   city: z.string().min(2),
@@ -43,11 +35,11 @@ const EditUser = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      fullName: "John Doe",
-      email: "john.doe@gmail.com",
-      phone: "+1 234 5678",
-      address: "123 Main St",
-      city: "New York",
+      fullName: 'John Doe',
+      email: 'john.doe@gmail.com',
+      phone: '+1 234 5678',
+      address: '123 Main St',
+      city: 'New York',
     },
   });
   return (
@@ -66,9 +58,7 @@ const EditUser = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Enter user full name.
-                    </FormDescription>
+                    <FormDescription>Enter user full name.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -82,9 +72,7 @@ const EditUser = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Only admin can see your email.
-                    </FormDescription>
+                    <FormDescription>Only admin can see your email.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -114,9 +102,7 @@ const EditUser = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Enter user address (optional)
-                    </FormDescription>
+                    <FormDescription>Enter user address (optional)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -130,9 +116,7 @@ const EditUser = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Enter user city (optional)
-                    </FormDescription>
+                    <FormDescription>Enter user city (optional)</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

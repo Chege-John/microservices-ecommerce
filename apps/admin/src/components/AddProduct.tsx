@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import {
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -17,76 +12,73 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from './ui/form';
+import { Input } from './ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
-import { Checkbox } from "./ui/checkbox";
-import { ScrollArea } from "./ui/scroll-area";
+} from '@/components/ui/select';
+import { Button } from './ui/button';
+import { Textarea } from './ui/textarea';
+import { Checkbox } from './ui/checkbox';
+import { ScrollArea } from './ui/scroll-area';
 
 const categories = [
-  "T-shirts",
-  "Shoes",
-  "Accessories",
-  "Bags",
-  "Dresses",
-  "Jackets",
-  "Gloves",
+  'T-shirts',
+  'Shoes',
+  'Accessories',
+  'Bags',
+  'Dresses',
+  'Jackets',
+  'Gloves',
 ] as const;
 
 const colors = [
-  "blue",
-  "green",
-  "red",
-  "yellow",
-  "purple",
-  "orange",
-  "pink",
-  "brown",
-  "gray",
-  "black",
-  "white",
+  'blue',
+  'green',
+  'red',
+  'yellow',
+  'purple',
+  'orange',
+  'pink',
+  'brown',
+  'gray',
+  'black',
+  'white',
 ] as const;
 
 const sizes = [
-  "xs",
-  "s",
-  "m",
-  "l",
-  "xl",
-  "xxl",
-  "34",
-  "35",
-  "36",
-  "37",
-  "38",
-  "39",
-  "40",
-  "41",
-  "42",
-  "43",
-  "44",
-  "45",
-  "46",
-  "47",
-  "48",
+  'xs',
+  's',
+  'm',
+  'l',
+  'xl',
+  'xxl',
+  '34',
+  '35',
+  '36',
+  '37',
+  '38',
+  '39',
+  '40',
+  '41',
+  '42',
+  '43',
+  '44',
+  '45',
+  '46',
+  '47',
+  '48',
 ] as const;
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: "Product name is required!" }),
-  shortDescription: z
-    .string()
-    .min(1, { message: "Short description is required!" })
-    .max(60),
-  description: z.string().min(1, { message: "Description is required!" }),
-  price: z.number().min(1, { message: "Price is required!" }),
+  name: z.string().min(1, { message: 'Product name is required!' }),
+  shortDescription: z.string().min(1, { message: 'Short description is required!' }).max(60),
+  description: z.string().min(1, { message: 'Description is required!' }),
+  price: z.number().min(1, { message: 'Price is required!' }),
   category: z.enum(categories),
   sizes: z.array(z.enum(sizes)),
   colors: z.array(z.enum(colors)),
@@ -114,9 +106,7 @@ const AddProduct = () => {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Enter the name of the product.
-                      </FormDescription>
+                      <FormDescription>Enter the name of the product.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -130,9 +120,7 @@ const AddProduct = () => {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Enter the short description of the product.
-                      </FormDescription>
+                      <FormDescription>Enter the short description of the product.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -146,9 +134,7 @@ const AddProduct = () => {
                       <FormControl>
                         <Textarea {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Enter the description of the product.
-                      </FormDescription>
+                      <FormDescription>Enter the description of the product.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -162,9 +148,7 @@ const AddProduct = () => {
                       <FormControl>
                         <Input type="number" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Enter the price of the product.
-                      </FormDescription>
+                      <FormDescription>Enter the price of the product.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -189,9 +173,7 @@ const AddProduct = () => {
                           </SelectContent>
                         </Select>
                       </FormControl>
-                      <FormDescription>
-                        Enter the category of the product.
-                      </FormDescription>
+                      <FormDescription>Enter the category of the product.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -214,9 +196,7 @@ const AddProduct = () => {
                                   if (checked) {
                                     field.onChange([...currentValues, size]);
                                   } else {
-                                    field.onChange(
-                                      currentValues.filter((v) => v !== size)
-                                    );
+                                    field.onChange(currentValues.filter((v) => v !== size));
                                   }
                                 }}
                               />
@@ -227,9 +207,7 @@ const AddProduct = () => {
                           ))}
                         </div>
                       </FormControl>
-                      <FormDescription>
-                        Select the available sizes for the product.
-                      </FormDescription>
+                      <FormDescription>Select the available sizes for the product.</FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -244,10 +222,7 @@ const AddProduct = () => {
                         <div className="space-y-4">
                           <div className="grid grid-cols-3 gap-4 my-2">
                             {colors.map((color) => (
-                              <div
-                                className="flex items-center gap-2"
-                                key={color}
-                              >
+                              <div className="flex items-center gap-2" key={color}>
                                 <Checkbox
                                   id="color"
                                   checked={field.value?.includes(color)}
@@ -256,16 +231,11 @@ const AddProduct = () => {
                                     if (checked) {
                                       field.onChange([...currentValues, color]);
                                     } else {
-                                      field.onChange(
-                                        currentValues.filter((v) => v !== color)
-                                      );
+                                      field.onChange(currentValues.filter((v) => v !== color));
                                     }
                                   }}
                                 />
-                                <label
-                                  htmlFor="color"
-                                  className="text-xs flex items-center gap-2"
-                                >
+                                <label htmlFor="color" className="text-xs flex items-center gap-2">
                                   <div
                                     className="w-2 h-2 rounded-full"
                                     style={{ backgroundColor: color }}
@@ -277,7 +247,9 @@ const AddProduct = () => {
                           </div>
                           {field.value && field.value.length > 0 && (
                             <div className="mt-8 space-y-4">
-                              <p className="text-sm font-medium">Upload images for selected colors:</p>
+                              <p className="text-sm font-medium">
+                                Upload images for selected colors:
+                              </p>
                               {field.value.map((color) => (
                                 <div className="flex items-center gap-2" key={color}>
                                   <div

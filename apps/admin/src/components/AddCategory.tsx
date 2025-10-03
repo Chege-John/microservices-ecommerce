@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import {
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -17,12 +12,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+} from './ui/form';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 
 const formSchema = z.object({
-  name: z.string().min(1, { message: "Name is Required!" }),
+  name: z.string().min(1, { message: 'Name is Required!' }),
 });
 
 const AddCategory = () => {

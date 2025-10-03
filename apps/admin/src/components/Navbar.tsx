@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { LogOut, Moon, Settings, Sun, User } from "lucide-react";
-import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { LogOut, Moon, Settings, Sun, User } from 'lucide-react';
+import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,10 +10,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
-import { useTheme } from "next-themes";
-import { SidebarTrigger, useSidebar } from "./ui/sidebar";
+} from './ui/dropdown-menu';
+import { Button } from './ui/button';
+import { useTheme } from 'next-themes';
+import { SidebarTrigger, useSidebar } from './ui/sidebar';
 
 const Navbar = () => {
   const { theme, setTheme } = useTheme();
@@ -38,15 +38,9 @@ const Navbar = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => setTheme("light")}>
-              Light
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("dark")}>
-              Dark
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setTheme("system")}>
-              System
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         {/* USER MENU */}

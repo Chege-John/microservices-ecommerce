@@ -1,26 +1,27 @@
-"use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+'use client';
 
-import PaymentForm from "@/components/PaymentForm";
-import ShippingForm from "@/components/ShippingForm";
-import useCartStore from "@/stores/cartStore";
-import { CartItemsType, ShippingFormInputs } from "@/types";
-import { ArrowRight, Trash2 } from "lucide-react";
-import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import PaymentForm from '@/components/PaymentForm';
+import ShippingForm from '@/components/ShippingForm';
+import useCartStore from '@/stores/cartStore';
+import { CartItemsType, ShippingFormInputs } from '@/types';
+import { ArrowRight, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 const steps = [
   {
     id: 1,
-    title: "Shopping Cart",
+    title: 'Shopping Cart',
   },
   {
     id: 2,
-    title: "Shipping Address",
+    title: 'Shipping Address',
   },
   {
     id: 3,
-    title: "Payment Method",
+    title: 'Payment Method',
   },
 ];
 
@@ -86,7 +87,7 @@ const CartPage = () => {
   const router = useRouter();
   const [shippingForm, setShippingForm] = useState<ShippingFormInputs>();
 
-  const activeStep = parseInt(searchParams.get("step") || "1");
+  const activeStep = parseInt(searchParams.get('step') || '1');
 
   const { cart, removeFromCart } = useCartStore();
   return (
@@ -98,20 +99,20 @@ const CartPage = () => {
         {steps.map((step) => (
           <div
             className={`flex items-center gap-2 border-b-2 pb-4 ${
-              step.id === activeStep ? "border-gray-800" : "border-gray-200"
+              step.id === activeStep ? 'border-gray-800' : 'border-gray-200'
             }`}
             key={step.id}
           >
             <div
               className={`w-6 h-6 rounded-full text-white p-4 flex items-center justify-center ${
-                step.id === activeStep ? "bg-gray-800" : "bg-gray-400"
+                step.id === activeStep ? 'bg-gray-800' : 'bg-gray-400'
               }`}
             >
               {step.id}
             </div>
             <p
               className={`text-sm font-medium ${
-                step.id === activeStep ? "text-gray-800" : "text-gray-400"
+                step.id === activeStep ? 'text-gray-800' : 'text-gray-400'
               }`}
             >
               {step.title}
@@ -135,7 +136,7 @@ const CartPage = () => {
                   {/* IMAGE */}
                   <div className="relative w-32 h-32 bg-gray-50 rounded-lg overflow-hidden">
                     <Image
-                      src={item.images[item.selectedColor]}
+                      src={item.images?.[item.selectedColor] || ''}
                       alt={item.name}
                       fill
                       className="object-contain"
@@ -145,15 +146,9 @@ const CartPage = () => {
                   <div className="flex flex-col justify-between">
                     <div className="flex flex-col gap-1">
                       <p className="text-sm font-medium">{item.name}</p>
-                      <p className="text-xs text-gray-500">
-                        Quantity: {item.quantity}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Size: {item.selectedSize}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Color: {item.selectedColor}
-                      </p>
+                      <p className="text-xs text-gray-500">Quantity: {item.quantity}</p>
+                      <p className="text-xs text-gray-500">Size: {item.selectedSize}</p>
+                      <p className="text-xs text-gray-500">Color: {item.selectedColor}</p>
                     </div>
                     <p className="font-medium">${item.price.toFixed(2)}</p>
                   </div>
@@ -172,9 +167,7 @@ const CartPage = () => {
           ) : activeStep === 3 && shippingForm ? (
             <PaymentForm />
           ) : (
-            <p className="text-sm text-gray-500">
-              Please fill in the shipping form to continue.
-            </p>
+            <p className="text-sm text-gray-500">Please fill in the shipping form to continue.</p>
           )}
         </div>
         {/* DETAILS */}
@@ -184,10 +177,7 @@ const CartPage = () => {
             <div className="flex justify-between text-sm">
               <p className="text-gray-500">Subtotal</p>
               <p className="font-medium">
-                $
-                {cart
-                  .reduce((acc, item) => acc + item.price * item.quantity, 0)
-                  .toFixed(2)}
+                ${cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
               </p>
             </div>
             <div className="flex justify-between text-sm">
@@ -202,16 +192,13 @@ const CartPage = () => {
             <div className="flex justify-between">
               <p className="text-gray-800 font-semibold">Total</p>
               <p className="font-medium">
-                $
-                {cart
-                  .reduce((acc, item) => acc + item.price * item.quantity, 0)
-                  .toFixed(2)}
+                ${cart.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
               </p>
             </div>
           </div>
           {activeStep === 1 && (
             <button
-              onClick={() => router.push("/cart?step=2", { scroll: false })}
+              onClick={() => router.push('/cart?step=2', { scroll: false })}
               className="w-full bg-gray-800 hover:bg-gray-900 transition-all duration-300 text-white p-2 rounded-lg cursor-pointer flex items-center justify-center gap-2"
             >
               Continue

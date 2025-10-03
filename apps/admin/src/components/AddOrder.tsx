@@ -1,14 +1,9 @@
-"use client";
+'use client';
 
-import {
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -17,21 +12,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
+} from './ui/form';
+import { Input } from './ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "./ui/button";
+} from '@/components/ui/select';
+import { Button } from './ui/button';
 
 const formSchema = z.object({
-  amount: z.number().min(1, { message: "Amount must be at least 1!" }),
-  userId: z.string().min(1, { message: "User Id is required!" }),
-  status: z.enum(["pending", "processing", "success", "failed"]),
+  amount: z.number().min(1, { message: 'Amount must be at least 1!' }),
+  userId: z.string().min(1, { message: 'User Id is required!' }),
+  status: z.enum(['pending', 'processing', 'success', 'failed']),
 });
 
 const AddOrder = () => {
@@ -54,9 +49,7 @@ const AddOrder = () => {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Enter the amount of the order.
-                    </FormDescription>
+                    <FormDescription>Enter the amount of the order.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -94,9 +87,7 @@ const AddOrder = () => {
                         </SelectContent>
                       </Select>
                     </FormControl>
-                    <FormDescription>
-                      Enter the status of the order.
-                    </FormDescription>
+                    <FormDescription>Enter the status of the order.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

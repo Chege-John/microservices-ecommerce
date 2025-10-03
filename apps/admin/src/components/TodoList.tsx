@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card } from "./ui/card";
-import { Checkbox } from "./ui/checkbox";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { ScrollArea } from "./ui/scroll-area";
-import { Button } from "./ui/button";
-import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
-import { Calendar } from "./ui/calendar";
+import { useState } from 'react';
+import { Card } from './ui/card';
+import { Checkbox } from './ui/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { ScrollArea } from './ui/scroll-area';
+import { Button } from './ui/button';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { Calendar } from './ui/calendar';
 
 const TodoList = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -20,7 +20,7 @@ const TodoList = () => {
         <PopoverTrigger asChild>
           <Button className="w-full">
             <CalendarIcon />
-            {date ? format(date, "PPP") : <span>Pick a date</span>}
+            {date ? format(date, 'PPP') : <span>Pick a date</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-0 w-auto">

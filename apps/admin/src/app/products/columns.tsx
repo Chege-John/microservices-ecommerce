@@ -1,7 +1,8 @@
-"use client";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,12 +10,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export type Product = {
   id: string | number;
@@ -29,13 +30,12 @@ export type Product = {
 
 export const columns: ColumnDef<Product>[] = [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
       />
     ),
@@ -47,14 +47,14 @@ export const columns: ColumnDef<Product>[] = [
     ),
   },
   {
-    accessorKey: "image",
-    header: "Image",
+    accessorKey: 'image',
+    header: 'Image',
     cell: ({ row }) => {
       const product = row.original;
       return (
         <div className="w-9 h-9 relative">
           <Image
-            src={product.images[product.colors[0]]}
+            src={product.images?.[product.colors[0] || ''] || ''}
             alt={product.name}
             fill
             className="rounded-full object-cover"
@@ -64,16 +64,16 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: 'name',
+    header: 'Name',
   },
   {
-    accessorKey: "price",
+    accessorKey: 'price',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Price
           <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -82,11 +82,11 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey: "shortDescription",
-    header: "Description",
+    accessorKey: 'shortDescription',
+    header: 'Description',
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       const product = row.original;
 
@@ -100,9 +100,7 @@ export const columns: ColumnDef<Product>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.id.toString())}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(product.id.toString())}>
               Copy product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />

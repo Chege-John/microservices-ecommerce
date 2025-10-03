@@ -1,55 +1,47 @@
-"use client";
-import {
-  Footprints,
-  Glasses,
-  Briefcase,
-  Shirt,
-  ShoppingBasket,
-  Hand,
-  Venus,
-} from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+'use client';
+import { Footprints, Glasses, Briefcase, Shirt, ShoppingBasket, Hand, Venus } from 'lucide-react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 const categories = [
   {
-    name: "All",
+    name: 'All',
     icon: <ShoppingBasket className="w-4 h-4" />,
-    slug: "all",
+    slug: 'all',
   },
   {
-    name: "T-shirts",
+    name: 'T-shirts',
     icon: <Shirt className="w-4 h-4" />,
-    slug: "t-shirts",
+    slug: 't-shirts',
   },
   {
-    name: "Shoes",
+    name: 'Shoes',
     icon: <Footprints className="w-4 h-4" />,
-    slug: "shoes",
+    slug: 'shoes',
   },
   {
-    name: "Accessories",
+    name: 'Accessories',
     icon: <Glasses className="w-4 h-4" />,
-    slug: "accessories",
+    slug: 'accessories',
   },
   {
-    name: "Bags",
+    name: 'Bags',
     icon: <Briefcase className="w-4 h-4" />,
-    slug: "bags",
+    slug: 'bags',
   },
   {
-    name: "Dresses",
+    name: 'Dresses',
     icon: <Venus className="w-4 h-4" />,
-    slug: "dresses",
+    slug: 'dresses',
   },
   {
-    name: "Jackets",
+    name: 'Jackets',
     icon: <Shirt className="w-4 h-4" />,
-    slug: "jackets",
+    slug: 'jackets',
   },
   {
-    name: "Gloves",
+    name: 'Gloves',
     icon: <Hand className="w-4 h-4" />,
-    slug: "gloves",
+    slug: 'gloves',
   },
 ];
 
@@ -58,11 +50,11 @@ const Categories = () => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const selectedCategory = searchParams.get("category");
+  const selectedCategory = searchParams.get('category');
 
   const handleChange = (value: string | null) => {
     const params = new URLSearchParams(searchParams);
-    params.set("category", value || "all");
+    params.set('category', value || 'all');
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
@@ -71,7 +63,7 @@ const Categories = () => {
       {categories.map((category) => (
         <div
           className={`flex items-center justify-center gap-2 cursor-pointer px-2 py-1 rounded-md ${
-            category.slug === selectedCategory ? "bg-white" : "text-gray-500"
+            category.slug === selectedCategory ? 'bg-white' : 'text-gray-500'
           }`}
           key={category.name}
           onClick={() => handleChange(category.slug)}

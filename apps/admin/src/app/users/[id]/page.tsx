@@ -1,5 +1,5 @@
-import CardList from "@/components/CardList";
-import { Badge } from "@/components/ui/badge";
+import CardList from '@/components/CardList';
+import { Badge } from '@/components/ui/badge';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,19 +7,15 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
-import { Progress } from "@/components/ui/progress";
-import { BadgeCheck, Candy, Citrus, Shield } from "lucide-react";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import EditUser from "@/components/EditUser";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import AppLineChart from "@/components/AppLineChart";
+} from '@/components/ui/breadcrumb';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import { Progress } from '@/components/ui/progress';
+import { BadgeCheck, Candy, Citrus, Shield } from 'lucide-react';
+import { Sheet, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import EditUser from '@/components/EditUser';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import AppLineChart from '@/components/AppLineChart';
 
 const SingleUserPage = () => {
   return (
@@ -71,8 +67,7 @@ const SingleUserPage = () => {
                 <HoverCardContent>
                   <h1 className="font-bold mb-2">Admin</h1>
                   <p className="text-sm text-muted-foreground">
-                    Admin users have access to all features and can manage
-                    users.
+                    Admin users have access to all features and can manage users.
                   </p>
                 </HoverCardContent>
               </HoverCard>
@@ -116,10 +111,9 @@ const SingleUserPage = () => {
               <h1 className="text-xl font-semibold">John Doe</h1>
             </div>
             <p className="text-sm text-muted-foreground">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel
-              voluptas distinctio ab ipsa commodi fugiat labore quos veritatis
-              cum corrupti sed repudiandae ipsum, harum recusandae ratione ipsam
-              in, quis quia.
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel voluptas distinctio ab
+              ipsa commodi fugiat labore quos veritatis cum corrupti sed repudiandae ipsum, harum
+              recusandae ratione ipsam in, quis quia.
             </p>
           </div>
           {/* INFORMATION CONTAINER */}
@@ -135,9 +129,7 @@ const SingleUserPage = () => {
             </div>
             <div className="space-y-4 mt-4">
               <div className="flex flex-col gap-2 mb-8">
-                <p className="text-sm text-muted-foreground">
-                  Profile completion
-                </p>
+                <p className="text-sm text-muted-foreground">Profile completion</p>
                 <Progress value={66} />
               </div>
               <div className="flex items-center gap-2">
@@ -161,14 +153,11 @@ const SingleUserPage = () => {
                 <span>New York</span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground mt-4">
-              Joined on 2025.01.01
-            </p>
+            <p className="text-sm text-muted-foreground mt-4">Joined on 2025.01.01</p>
           </div>
         </div>
         {/* RIGHT */}
         <div className="w-full xl:w-2/3 space-y-6">
-          
           {/* CHART CONTAINER */}
           <div className="bg-primary-foreground p-4 rounded-lg">
             <h1 className="text-xl font-semibold">User Activity</h1>

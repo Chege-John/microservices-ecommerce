@@ -1,6 +1,6 @@
-import { CartStoreActionsType, CartStoreStateType } from "@/types";
-import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
+import { CartStoreActionsType, CartStoreStateType } from '@/types';
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
   persist(
@@ -13,12 +13,12 @@ const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
             (p) =>
               p.id === product.id &&
               p.selectedSize === product.selectedSize &&
-              p.selectedColor === product.selectedColor
+              p.selectedColor === product.selectedColor,
           );
 
           if (existingIndex !== -1) {
             const updatedCart = [...state.cart];
-            updatedCart[existingIndex].quantity += product.quantity || 1;
+            updatedCart[existingIndex]!.quantity += product.quantity || 1;
             return { cart: updatedCart };
           }
 
@@ -42,21 +42,21 @@ const useCartStore = create<CartStoreStateType & CartStoreActionsType>()(
                 p.id === product.id &&
                 p.selectedSize === product.selectedSize &&
                 p.selectedColor === product.selectedColor
-              )
+              ),
           ),
         })),
       clearCart: () => set({ cart: [] }),
     }),
     {
-      name: "cart",
+      name: 'cart',
       storage: createJSONStorage(() => localStorage),
       onRehydrateStorage: () => (state) => {
         if (state) {
           state.hasHydrated = true;
         }
       },
-    }
-  )
+    },
+  ),
 );
 
 export default useCartStore;
