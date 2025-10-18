@@ -1,18 +1,21 @@
 {
   "name": "microservices-ecommerce",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-  "format:check": "prettier --check ."
+    "format:check": "prettier --check \"**/*.{js,ts,tsx,prisma,md}\""
   },
   "devDependencies": {
     "prettier": "^3.6.2",
     "turbo": "^2.5.8",
-  "typescript": "5.9.2"
+    "typescript": "5.9.2"
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {

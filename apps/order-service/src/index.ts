@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import Clerk from '@clerk/fastify';
-import { shouldBeUser } from './middleware/authmiddleware.js';
+import { shouldBeUser } from './middleware/authMiddleware.js';
 
 const fastify = Fastify();
 
