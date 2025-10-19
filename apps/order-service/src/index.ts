@@ -2,12 +2,18 @@ import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import Clerk from '@clerk/fastify';
 import { shouldBeUser } from './middleware/authMiddleware.js';
+import { connectOrderDB } from '@repo/order-db';
+import { orderRoute } from '../routes/order.js';
 
 const fastify = Fastify();
 
 // Enable CORS
 fastify.register(cors, {
-  origin: ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:3003'],
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3002',
+    'http://localhost:3003',
+  ],
   credentials: true,
 });
 
@@ -22,15 +28,21 @@ fastify.get('/health', (request, reply) => {
 });
 
 fastify.get('/test', { preHandler: shouldBeUser }, (request, reply) => {
-  return reply.send({ message: 'Order service authenticated', userId: request.userId });
+  return reply.send({
+    message: 'Order service authenticated',
+    userId: request.userId,
+  });
 });
+
+fastify.register(orderRoute);
 
 const start = async () => {
   try {
+    await connectOrderDB();
     await fastify.listen({ port: 8001 });
     console.log('Order service is running on port 8001');
   } catch (err) {
-    fastify.log.error(err);
+    console.log(err);
     process.exit(1);
   }
 };
