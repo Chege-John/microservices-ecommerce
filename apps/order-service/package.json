@@ -6,13 +6,14 @@
   "type": "module",
   "scripts": {
     "check-types": "tsc --noEmit",
-    "dev": "tsx --env-file=.env --watch src/index.ts"
+    "dev": "tsx watch --env-file=.env src/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
+    "@repo/types": "workspace:*",
     "@types/node": "^20",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
