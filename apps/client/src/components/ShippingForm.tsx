@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ShippingFormInputs, shippingFormSchema } from '@/types';
+import { ShippingFormInputs, shippingFormSchema } from '@repo/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -26,7 +26,10 @@ const ShippingForm = ({
   };
 
   return (
-    <form className="flex flex-col gap-4" onSubmit={handleSubmit(handleShippingForm)}>
+    <form
+      className="flex flex-col gap-4"
+      onSubmit={handleSubmit(handleShippingForm)}
+    >
       <div className="flex flex-col gap-1">
         <label htmlFor="name" className="text-xs text-gray-500 font-medium">
           Name
@@ -37,8 +40,11 @@ const ShippingForm = ({
           id="name"
           placeholder="John Doe"
           {...register('name')}
+          value="John Irungu"
         />
-        {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+        {errors.name && (
+          <p className="text-xs text-red-500">{errors.name.message}</p>
+        )}
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="email" className="text-xs text-gray-500 font-medium">
@@ -50,8 +56,11 @@ const ShippingForm = ({
           id="email"
           placeholder="johndoe@gmail.com"
           {...register('email')}
+          value="johnirunguchege2000@gmail.com"
         />
-        {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+        {errors.email && (
+          <p className="text-xs text-red-500">{errors.email.message}</p>
+        )}
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="phone" className="text-xs text-gray-500 font-medium">
@@ -63,8 +72,11 @@ const ShippingForm = ({
           id="phone"
           placeholder="123456789"
           {...register('phone')}
+          value="123456789"
         />
-        {errors.phone && <p className="text-xs text-red-500">{errors.phone.message}</p>}
+        {errors.phone && (
+          <p className="text-xs text-red-500">{errors.phone.message}</p>
+        )}
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="address" className="text-xs text-gray-500 font-medium">
@@ -76,8 +88,11 @@ const ShippingForm = ({
           id="address"
           placeholder="123 Main St, Anytown"
           {...register('address')}
+          value="123 Main St, Anytown"
         />
-        {errors.address && <p className="text-xs text-red-500">{errors.address.message}</p>}
+        {errors.address && (
+          <p className="text-xs text-red-500">{errors.address.message}</p>
+        )}
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="city" className="text-xs text-gray-500 font-medium">
@@ -89,8 +104,11 @@ const ShippingForm = ({
           id="city"
           placeholder="New York"
           {...register('city')}
+          value="New York"
         />
-        {errors.city && <p className="text-xs text-red-500">{errors.city.message}</p>}
+        {errors.city && (
+          <p className="text-xs text-red-500">{errors.city.message}</p>
+        )}
       </div>
       <button
         type="submit"
