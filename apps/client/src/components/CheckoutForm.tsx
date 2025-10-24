@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ShippingFormInputs } from '@/types';
 import { PaymentElement, useCheckout } from '@stripe/react-stripe-js/checkout';
 import { ConfirmError } from '@stripe/stripe-js';
@@ -53,7 +54,8 @@ const CheckoutForm = ({
 
     setLoading(true);
 
-    try {
+    {
+      /* try {
       console.log('Updating email...');
       await session.updateEmail(shippingForm.email);
 
@@ -79,12 +81,13 @@ const CheckoutForm = ({
       setError({ message: 'An unexpected error occurred' } as ConfirmError);
     } finally {
       setLoading(false);
+    }*/
     }
   };
 
   console.log('Rendering CheckoutForm, checkout type:', checkout.type);
 
-  if (checkout.type === 'loading' || checkout.type === 'success') {
+  if (checkout.type === 'loading') {
     return (
       <div className="p-4 bg-gray-50 rounded">
         <p>Initializing payment form...</p>
@@ -111,7 +114,7 @@ const CheckoutForm = ({
       </div>
 
       <button
-        type="button"
+        type="submit"
         disabled={loading}
         onClick={handleClick}
         className="w-full bg-blue-600 text-white py-3 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"

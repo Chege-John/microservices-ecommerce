@@ -50,6 +50,9 @@ sessionRoute.post('/create-checkout-session', shouldBeUser, async (c) => {
       mode: 'payment',
       ui_mode: 'custom',
       customer_email: userEmail,
+      billing_address_collection: 'auto',
+      //  shipping_address_collection: undefined,
+      //   shipping_options: [],
       // The URL of your payment completion page
       return_url:
         'http://localhost:3002/return?session_id={CHECKOUT_SESSION_ID}',
