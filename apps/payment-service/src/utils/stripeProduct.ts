@@ -18,14 +18,48 @@ export const createStripeProduct = async (item: StripeProductType) => {
   }
 };
 
-export const getStripeProductPrice = async (productId: number) => {
+{
+  /*export const getStripeProductPrice = async (productId: number) => {
   try {
     const res = await stripe.prices.list({
-      product: '123',
+      product: productId.toString(),
     });
     return res.data[0]?.unit_amount;
   } catch (error) {
     console.error('Error getting Stripe product price:', error);
     throw error;
+  }
+};*/
+}
+
+// Payment Service: This logic communicates via HTTP
+export const getStripeProductPrice = async (
+  productId: number
+): Promise<number | null> => {
+  const PRODUCT_SERVICE_URL = process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL;
+
+  try {
+    const response = await fetch(
+      `${PRODUCT_SERVICE_URL}/products/price/${productId}`
+    );
+
+    console.log(
+      `Fetching price for product ID ${productId} from ${PRODUCT_SERVICE_URL}`
+    );
+
+    if (!response.ok) {
+      console.error(
+        `Product Service failed for ID ${productId}: ${response.status}`
+      );
+      return null;
+    }
+
+    const data = await response.json();
+
+    // Assume Product Service returns { unitAmount: 2000 }
+    return data.unitAmount || null;
+  } catch (error) {
+    console.error('Network failure connecting to Product Service:', error);
+    return null;
   }
 };

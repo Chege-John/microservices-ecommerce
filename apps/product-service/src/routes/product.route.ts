@@ -3,6 +3,7 @@ import {
   createProduct,
   deleteProduct,
   getProduct,
+  getProductPrice,
   getProducts,
   updateProduct,
 } from '../controllers/product.controller';
@@ -15,5 +16,6 @@ router.put('/:id', shouldBeAdmin, updateProduct);
 router.delete('/:id', shouldBeAdmin, deleteProduct);
 router.get('/', getProducts);
 router.get('/:id', getProduct);
+router.get('/price/:id', getProductPrice);
 
 export default router;

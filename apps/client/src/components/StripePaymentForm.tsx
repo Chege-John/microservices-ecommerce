@@ -26,7 +26,32 @@ const getClientSecret = async (
       },
     }
   );
+
+  if (!response.ok) {
+    // If the status is 4xx or 5xx, the server might have sent "Internal Server Error" text.
+    // Reading it as text prevents the SyntaxError crash.
+    const errorBody = await response.text();
+    console.error(
+      'Failed to fetch client secret. Status:',
+      response.status,
+      'Response:',
+      errorBody
+    );
+
+    // Throw an error that the parent component can catch
+    throw new Error(
+      `Failed to initialize payment (${response.status}): ${errorBody.substring(0, 100)}...`
+    );
+    
+  }
+
   const json = await response.json();
+
+  if (json.error) {
+    console.error('API returned an error in the JSON body:', json.error);
+    throw new Error(json.error.message || 'Payment service returned an error.');
+  }
+
   return json.checkoutSessionClientSecret;
 };
 

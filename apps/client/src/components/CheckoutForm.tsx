@@ -54,6 +54,25 @@ const CheckoutForm = ({
 
     setLoading(true);
 
+    try {
+      console.log('Confirming payment...');
+
+      const res = await session.confirm();
+
+      console.log('Confirmation result:', res);
+
+      if (res.type === 'error') {
+        setError(res.error);
+        console.error('Payment confirmation error:', res.error);
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setError({ message: 'An unexpected error occurred' } as ConfirmError);
+    } finally {
+      // Only executes if the function finishes without getting stuck
+      setLoading(false);
+    }
+
     {
       /* try {
       console.log('Updating email...');

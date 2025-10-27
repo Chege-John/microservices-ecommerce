@@ -92,3 +92,48 @@ export const getProduct = async (req: Request, res: Response) => {
 
   return res.status(200).json(product);
 };
+
+export const getProductPrice = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  // Log to confirm the request reached this handler
+  console.log(`[Product Service] Received price request for ID: ${id}`);
+
+  try {
+    const productId = Number(id);
+
+    // Use findUnique to get the product, selecting only the price field
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+      select: { price: true }, // Select only the price field for efficiency
+    });
+
+    if (!product || product.price === undefined) {
+      // Product not found or price is missing
+      console.warn(
+        `[Product Service] Product ID ${id} not found or price is null/undefined.`
+      );
+      return res.status(404).json({ message: 'Product price not found.' });
+    }
+
+    // Convert the price from dollars/decimals to cents/integer
+    const unitAmount = Math.round(product.price * 100);
+
+    // Log success before responding
+    console.log(`[Product Service] Price for ID ${id} is: ${unitAmount}`);
+
+    // Respond with the required payload { unitAmount: 2000 }
+    return res.status(200).json({ unitAmount });
+  } catch (error) {
+    // 💥 CRITICAL: This logs the Prisma connection error if it occurs
+    console.error(
+      '*** PRISMA CONNECTION FAILURE IN getProductPrice ***',
+      error
+    );
+
+    // The Payment Service will read this 500 and return null for the price
+    return res
+      .status(500)
+      .json({ message: 'Database query failed on Product Service.' });
+  }
+};
