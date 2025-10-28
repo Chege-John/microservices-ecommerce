@@ -211,6 +211,9 @@ importers:
       '@fastify/cors':
         specifier: ^11.1.0
         version: 11.1.0
+      '@repo/kafka':
+        specifier: workspace:*
+        version: link:../../packages/kafka
       '@repo/order-db':
         specifier: workspace:*
         version: link:../../packages/order-db
@@ -242,6 +245,9 @@ importers:
       '@hono/node-server':
         specifier: ^1.19.5
         version: 1.19.5(hono@4.9.9)
+      '@repo/kafka':
+        specifier: workspace:*
+        version: link:../../packages/kafka
       hono:
         specifier: ^4.9.9
         version: 4.9.9
@@ -270,6 +276,9 @@ importers:
       '@clerk/express':
         specifier: ^1.7.35
         version: 1.7.35(express@5.1.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@repo/kafka':
+        specifier: workspace:*
+        version: link:../../packages/kafka
       '@repo/product-db':
         specifier: workspace:*
         version: link:../../packages/product-db
@@ -373,6 +382,9 @@ importers:
 
   packages/types:
     dependencies:
+      '@repo/order-db':
+        specifier: workspace:*
+        version: link:../order-db
       '@repo/product-db':
         specifier: workspace:*
         version: link:../product-db

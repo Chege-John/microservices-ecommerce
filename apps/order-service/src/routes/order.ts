@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { shouldBeAdmin, shouldBeUser } from '../src/middleware/authMiddleware';
+import { shouldBeAdmin, shouldBeUser } from '../middleware/authMiddleware';
 import { Order } from '@repo/order-db';
 
 export const orderRoute = async (fastify: FastifyInstance) => {
