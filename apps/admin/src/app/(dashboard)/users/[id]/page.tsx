@@ -8,7 +8,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
 import { Progress } from '@/components/ui/progress';
 import { BadgeCheck, Candy, Citrus, Shield } from 'lucide-react';
 import { Sheet, SheetTrigger } from '@/components/ui/sheet';
@@ -16,8 +20,42 @@ import { Button } from '@/components/ui/button';
 import EditUser from '@/components/EditUser';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import AppLineChart from '@/components/AppLineChart';
+import { auth, User } from '@clerk/nextjs/server';
 
-const SingleUserPage = () => {
+const getData = async (id: string): Promise<User | null> => {
+  const { getToken } = await auth();
+  const token = await getToken();
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_AUTH_SERVICE_URL}/users/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log('Error fetching user:', error);
+    return null;
+  }
+};
+
+const SingleUserPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const data = await getData(id);
+
+  if (!data) {
+    return <div>User not found</div>;
+  }
+
   return (
     <div className="">
       <Breadcrumb>
@@ -31,7 +69,9 @@ const SingleUserPage = () => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>John Doe</BreadcrumbPage>
+            <BreadcrumbPage>
+              {data?.firstName + ' ' + data?.lastName || data?.username || '-'}
+            </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -67,7 +107,8 @@ const SingleUserPage = () => {
                 <HoverCardContent>
                   <h1 className="font-bold mb-2">Admin</h1>
                   <p className="text-sm text-muted-foreground">
-                    Admin users have access to all features and can manage users.
+                    Admin users have access to all features and can manage
+                    users.
                   </p>
                 </HoverCardContent>
               </HoverCard>
@@ -105,15 +146,25 @@ const SingleUserPage = () => {
           <div className="bg-primary-foreground p-4 rounded-lg space-y-2">
             <div className="flex items-center gap-2">
               <Avatar className="size-12">
-                <AvatarImage src="https://avatars.githubusercontent.com/u/1486366" />
-                <AvatarFallback>JD</AvatarFallback>
+                <AvatarImage src={data?.imageUrl} />
+                <AvatarFallback>
+                  {data?.firstName?.charAt(0) ||
+                    data?.username?.charAt(0) ||
+                    '-'}
+                </AvatarFallback>
               </Avatar>
-              <h1 className="text-xl font-semibold">John Doe</h1>
+              <h1 className="text-xl font-semibold">
+                {' '}
+                {data?.firstName + ' ' + data?.lastName ||
+                  data?.username ||
+                  '-'}
+              </h1>
             </div>
             <p className="text-sm text-muted-foreground">
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel voluptas distinctio ab
-              ipsa commodi fugiat labore quos veritatis cum corrupti sed repudiandae ipsum, harum
-              recusandae ratione ipsam in, quis quia.
+              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel
+              voluptas distinctio ab ipsa commodi fugiat labore quos veritatis
+              cum corrupti sed repudiandae ipsum, harum recusandae ratione ipsam
+              in, quis quia.
             </p>
           </div>
           {/* INFORMATION CONTAINER */}
@@ -129,31 +180,40 @@ const SingleUserPage = () => {
             </div>
             <div className="space-y-4 mt-4">
               <div className="flex flex-col gap-2 mb-8">
-                <p className="text-sm text-muted-foreground">Profile completion</p>
+                <p className="text-sm text-muted-foreground">
+                  Profile completion
+                </p>
                 <Progress value={66} />
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-bold">Full name:</span>
-                <span>John Doe</span>
+                <span>
+                  {' '}
+                  {data?.firstName + ' ' + data?.lastName ||
+                    data?.username ||
+                    '-'}
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-bold">Email:</span>
-                <span>john.doe@gmail.com</span>
+                <span>{data.emailAddresses[0]?.emailAddress || '-'}</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-bold">Phone:</span>
-                <span>+1 234 5678</span>
+                <span>{data.phoneNumbers[0]?.phoneNumber || '-'}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-bold">Address:</span>
-                <span>123 Main St</span>
+                <span className="font-bold">Role:</span>
+                <span>{String(data.publicMetadata?.role) || 'user'}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-bold">City:</span>
-                <span>New York</span>
+                <span className="font-bold">Status:</span>
+                <span>{data.banned ? 'Banned' : 'Active'}</span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground mt-4">Joined on 2025.01.01</p>
+            <p className="text-sm text-muted-foreground mt-4">
+              Joined on {new Date(data.createdAt).toLocaleDateString('en-US')}
+            </p>
           </div>
         </div>
         {/* RIGHT */}

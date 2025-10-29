@@ -12,8 +12,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@repo/typescript-config": "workspace:*",
     "@repo/types": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "^20",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"
@@ -21,8 +21,9 @@
   "dependencies": {
     "@clerk/fastify": "^2.4.35",
     "@fastify/cors": "^11.1.0",
-    "fastify": "^5.5.0",
+    "@repo/kafka": "workspace:*",
     "@repo/order-db": "workspace:*",
-    "@repo/kafka": "workspace:*"
+    "date-fns": "^4.1.0",
+    "fastify": "^5.5.0"
   }
 }

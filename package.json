@@ -1,6 +1,7 @@
 {
   "name": "microservices-ecommerce",
   "private": true,
+  "author": "chege-john",
   "workspaces": [
     "packages/*"
   ],

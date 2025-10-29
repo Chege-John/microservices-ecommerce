@@ -1,8 +1,9 @@
-import { Product, columns } from './columns';
+import { ProductsType } from '@repo/types';
+import { columns } from './columns';
 import { DataTable } from './data-table';
 
-const getData = async (): Promise<Product[]> => {
-  return [
+const getData = async (): Promise<ProductsType> => {
+  /* return [
     {
       id: 1,
       name: 'Adidas CoreFit T-Shirt',
@@ -111,10 +112,22 @@ const getData = async (): Promise<Product[]> => {
       colors: ['blue', 'green'],
       images: { blue: '/products/8b.png', green: '/products/8gr.png' },
     },
-  ];
+  ]; */
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products`
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
-const PaymentsPage = async () => {
+const ProductsPage = async () => {
   const data = await getData();
   return (
     <div className="">
@@ -126,4 +139,4 @@ const PaymentsPage = async () => {
   );
 };
 
-export default PaymentsPage;
+export default ProductsPage;

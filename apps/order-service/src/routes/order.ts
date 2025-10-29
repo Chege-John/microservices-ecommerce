@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import { shouldBeAdmin, shouldBeUser } from '../middleware/authMiddleware';
 import { Order } from '@repo/order-db';
+import { startOfMonth, subMonths } from 'date-fns';
 
 export const orderRoute = async (fastify: FastifyInstance) => {
   fastify.get(
@@ -17,6 +18,27 @@ export const orderRoute = async (fastify: FastifyInstance) => {
     async (request, reply) => {
       const orders = await Order.find();
       return reply.send(orders);
+    }
+  );
+  fastify.get(
+    '/order-chart',
+    { preHandler: shouldBeAdmin },
+    async (request, reply) => {
+      const now = new Date();
+      const sixMonthsAgo = startOfMonth(subMonths(now, 5));
+
+      const raw = await Order.aggregate([
+        { $match: { createdAt: { $gte: sixMonthsAgo, $lte: now } } },
+        {
+          $group: {
+            _id: {
+              year: { $year: '$createdAt' },
+              month: { $month: '$createdAt' },
+            },
+            total: { $sum: 1 },
+          },
+        },
+      ]);
     }
   );
 };

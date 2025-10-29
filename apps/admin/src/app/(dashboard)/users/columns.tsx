@@ -11,18 +11,19 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { User } from '@clerk/nextjs/server';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export type User = {
+/* export type User = {
   id: string;
   avatar: string;
   fullName: string;
   email: string;
   status: 'active' | 'inactive';
-};
+}; */
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -31,7 +32,8 @@ export const columns: ColumnDef<User>[] = [
       <Checkbox
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
       />
     ),
@@ -49,14 +51,23 @@ export const columns: ColumnDef<User>[] = [
       const user = row.original;
       return (
         <div className="w-9 h-9 relative">
-          <Image src={user.avatar} alt={user.fullName} fill className="rounded-full object-cover" />
+          <Image
+            src={user.imageUrl}
+            alt={user.fullName || 'User Avatar'}
+            fill
+            className="rounded-full object-cover"
+          />
         </div>
       );
     },
   },
   {
-    accessorKey: 'fullName',
+    accessorKey: 'firstName',
     header: 'User',
+    cell: ({ row }) => {
+      const user = row.original;
+      return <div className="">{user.firstName || user.fullName || '-'}</div>;
+    },
   },
   {
     accessorKey: 'email',
@@ -71,19 +82,24 @@ export const columns: ColumnDef<User>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const user = row.original;
+      return <div className="">{user.emailAddresses[0]?.emailAddress}</div>;
+    },
   },
   {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const status = row.getValue('status');
+      const user = row.original;
+      const status = user.banned ? 'banned' : 'active';
 
       return (
         <div
           className={cn(
             `p-1 rounded-md w-max text-xs`,
             status === 'active' && 'bg-green-500/40',
-            status === 'inactive' && 'bg-red-500/40',
+            status === 'banned' && 'bg-red-500/40'
           )}
         >
           {status as string}
@@ -106,7 +122,9 @@ export const columns: ColumnDef<User>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.id)}>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(user.id)}
+            >
               Copy user ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />

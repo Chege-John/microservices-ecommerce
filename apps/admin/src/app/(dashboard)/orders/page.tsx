@@ -1,8 +1,10 @@
-import { Payment, columns } from './columns';
+import { auth } from '@clerk/nextjs/server';
+import { columns } from './columns';
 import { DataTable } from './data-table';
+import { OrderType } from '@repo/types';
 
-const getData = async (): Promise<Payment[]> => {
-  return [
+const getData = async (): Promise<OrderType[]> => {
+  /* return [
     {
       id: '728ed521',
       amount: 134,
@@ -291,10 +293,28 @@ const getData = async (): Promise<Payment[]> => {
       userId: '19',
       email: 'annecruz@gmail.com',
     },
-  ];
+  ]; */
+
+  try {
+    const { getToken } = await auth();
+    const token = await getToken();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_ORDER_SERVICE_URL}/orders`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
 };
 
-const PaymentsPage = async () => {
+const OrdersPage = async () => {
   const data = await getData();
   return (
     <div className="">
@@ -306,4 +326,4 @@ const PaymentsPage = async () => {
   );
 };
 
-export default PaymentsPage;
+export default OrdersPage;

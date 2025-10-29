@@ -8,8 +8,16 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.pexels.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+      },
     ],
   },
+  transpilePackages: [
+    '@radix-ui/react-dialog',
+    '@radix-ui/react-dismissable-layer', // Include both for safety
+  ],
 };
 
 export default nextConfig;
