@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ProductsType } from '@repo/types';
 import Categories from './Categories';
 import ProductCard from './ProductCard';
 import Link from 'next/link';
 import Filter from './Filter';
+import { ProductType } from '@/types';
 
 // TEMPORARY
-const products: ProductsType = [
+/* const products: ProductsType = [
   {
     id: 1,
     name: 'Adidas CoreFit T-Shirt',
@@ -138,15 +140,45 @@ const products: ProductsType = [
     createdAt: new Date(),
     updatedAt: new Date(),
   },
-];
+]; */
 
-const ProductList = ({
+const fetchData = async ({
   category,
+  sort,
+  search,
   params,
 }: {
-  category: string;
+  category?: string;
+  sort?: string;
+  search?: string;
   params: 'homepage' | 'products';
 }) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products?` +
+      new URLSearchParams({
+        ...(category ? { category } : {}),
+        ...(sort ? { sort } : {}),
+        ...(search ? { search } : {}),
+        ...(params === 'homepage' ? { limit: '8' } : {}),
+      })
+  );
+
+  const data: ProductType[] = await res.json();
+  return data;
+};
+
+const ProductList = async ({
+  category,
+  params,
+  search,
+  sort,
+}: {
+  category: string;
+  sort?: string;
+  search?: string;
+  params: 'homepage' | 'products';
+}) => {
+  const products = await fetchData({ category, params, search, sort });
   return (
     <div className="w-full">
       <Categories />

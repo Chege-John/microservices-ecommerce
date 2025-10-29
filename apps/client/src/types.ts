@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export type ProductType = {
-  id: string | number;
+  id: number;
   name: string;
   shortDescription: string;
   description: string;
@@ -9,6 +9,9 @@ export type ProductType = {
   sizes: [string, ...string[]];
   colors: [string, ...string[]];
   images: Record<string, string>;
+  createdAt: Date;
+  updatedAt: Date;
+  categorySlug: string;
 };
 
 export type ProductsType = ProductType[];
