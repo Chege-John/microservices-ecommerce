@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import { Card, CardContent, CardFooter, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
+import { OrderType, ProductsType } from '@repo/types';
+import { auth } from '@clerk/nextjs/server';
 
-const popularProducts = [
+/* const popularProducts = [
   {
     id: 1,
     name: 'Adidas CoreFit T-Shirt',
-    shortDescription: 'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
+    shortDescription:
+      'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     description:
       'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     price: 39.9,
@@ -21,7 +24,8 @@ const popularProducts = [
   {
     id: 2,
     name: 'Puma Ultra Warm Zip',
-    shortDescription: 'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
+    shortDescription:
+      'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     description:
       'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     price: 59.9,
@@ -32,7 +36,8 @@ const popularProducts = [
   {
     id: 3,
     name: 'Nike Air Essentials Pullover',
-    shortDescription: 'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
+    shortDescription:
+      'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     description:
       'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     price: 69.9,
@@ -47,7 +52,8 @@ const popularProducts = [
   {
     id: 4,
     name: 'Nike Dri Flex T-Shirt',
-    shortDescription: 'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
+    shortDescription:
+      'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     description:
       'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     price: 29.9,
@@ -58,7 +64,8 @@ const popularProducts = [
   {
     id: 5,
     name: 'Under Armour StormFleece',
-    shortDescription: 'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
+    shortDescription:
+      'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     description:
       'Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.',
     price: 49.9,
@@ -70,7 +77,7 @@ const popularProducts = [
       black: '/products/5bl.png',
     },
   },
-];
+]; */
 
 const latestTransactions = [
   {
@@ -115,38 +122,68 @@ const latestTransactions = [
   },
 ];
 
-const CardList = ({ title }: { title: string }) => {
+const CardList = async ({ title }: { title: string }) => {
+  let products: ProductsType = [];
+  let orders: OrderType[] = [];
+
+  const { getToken } = await auth();
+  const token = await getToken();
+
+  if (title === 'Popular Products') {
+    products = await fetch(
+      `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/product?limit=5&popular=true`
+    ).then((res) => res.json());
+  } else {
+    orders = await fetch(
+      `${process.env.NEXT_PUBLIC_ORDER_SERVICE_URL}/orders?limit=5`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    ).then((res) => res.json());
+  }
   return (
     <div className="">
       <h1 className="text-lg font-medium mb-6">{title}</h1>
       <div className="flex flex-col gap-2">
         {title === 'Popular Products'
-          ? popularProducts.map((item) => (
-              <Card key={item.id} className="flex-row items-center justify-between gap-4 p-4">
+          ? products.map((item) => (
+              <Card
+                key={item.id}
+                className="flex-row items-center justify-between gap-4 p-4"
+              >
                 <div className="w-12 h-12 rounded-sm relative overflow-hidden">
                   <Image
-                    src={Object.values(item.images)[0] || ''}
+                    src={
+                      Object.values(item.images as Record<string, string>)[0] ||
+                      ''
+                    }
                     alt={item.name}
                     fill
                     className="object-cover"
                   />
                 </div>
                 <CardContent className="flex-1 p-0">
-                  <CardTitle className="text-sm font-medium">{item.name}</CardTitle>
+                  <CardTitle className="text-sm font-medium">
+                    {item.name}
+                  </CardTitle>
                 </CardContent>
                 <CardFooter className="p-0">${item.price}K</CardFooter>
               </Card>
             ))
-          : latestTransactions.map((item) => (
-              <Card key={item.id} className="flex-row items-center justify-between gap-4 p-4">
-                <div className="w-12 h-12 rounded-sm relative overflow-hidden">
-                  <Image src={item.image} alt={item.title} fill className="object-cover" />
-                </div>
+          : orders.map((item) => (
+              <Card
+                key={item._id}
+                className="flex-row items-center justify-between gap-4 p-4"
+              >
                 <CardContent className="flex-1 p-0">
-                  <CardTitle className="text-sm font-medium">{item.title}</CardTitle>
-                  <Badge variant="secondary">{item.badge}</Badge>
+                  <CardTitle className="text-sm font-medium">
+                    {item.email}
+                  </CardTitle>
+                  <Badge variant="secondary">{item.status}</Badge>
                 </CardContent>
-                <CardFooter className="p-0">${item.count / 1000}K</CardFooter>
+                <CardFooter className="p-0">${item.amount / 100}</CardFooter>
               </Card>
             ))}
       </div>
