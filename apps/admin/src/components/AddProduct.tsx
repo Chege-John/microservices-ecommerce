@@ -1,6 +1,11 @@
 'use client';
 
-import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import {
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,8 +30,12 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { Checkbox } from './ui/checkbox';
 import { ScrollArea } from './ui/scroll-area';
+import { CategoryType, colors, ProductFormSchema, sizes } from '@repo/types';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { useAuth } from '@clerk/nextjs';
 
-const categories = [
+/* const categories = [
   'T-shirts',
   'Shoes',
   'Accessories',
@@ -35,60 +44,68 @@ const categories = [
   'Jackets',
   'Gloves',
 ] as const;
+ */
 
-const colors = [
-  'blue',
-  'green',
-  'red',
-  'yellow',
-  'purple',
-  'orange',
-  'pink',
-  'brown',
-  'gray',
-  'black',
-  'white',
-] as const;
+const fetchCategories = async () => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/categories`
+  );
 
-const sizes = [
-  'xs',
-  's',
-  'm',
-  'l',
-  'xl',
-  'xxl',
-  '34',
-  '35',
-  '36',
-  '37',
-  '38',
-  '39',
-  '40',
-  '41',
-  '42',
-  '43',
-  '44',
-  '45',
-  '46',
-  '47',
-  '48',
-] as const;
+  if (!res.ok) {
+    throw new Error('Failed to fetch categories');
+  }
 
-const formSchema = z.object({
-  name: z.string().min(1, { message: 'Product name is required!' }),
-  shortDescription: z.string().min(1, { message: 'Short description is required!' }).max(60),
-  description: z.string().min(1, { message: 'Description is required!' }),
-  price: z.number().min(1, { message: 'Price is required!' }),
-  category: z.enum(categories),
-  sizes: z.array(z.enum(sizes)),
-  colors: z.array(z.enum(colors)),
-  images: z.record(z.enum(colors), z.string()),
-});
+  return await res.json();
+};
 
 const AddProduct = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof ProductFormSchema>>({
+    resolver: zodResolver(ProductFormSchema),
+    defaultValues: {
+      name: '',
+      shortDescription: '',
+      description: '',
+      price: 0,
+      categorySlug: '',
+      sizes: [],
+      colors: [],
+      images: {},
+    },
   });
+
+  const { isPending, error, data } = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+  });
+
+  const { getToken } = useAuth();
+
+  const mutation = useMutation({
+    mutationFn: async (data: z.infer<typeof ProductFormSchema>) => {
+      const token = await getToken();
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_PRODUCT_SERVICE_URL}/products`,
+        {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        throw new Error('Failed to create product');
+      }
+    },
+    onSuccess: () => {
+      toast.success('Product created successfully');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   return (
     <SheetContent>
       <ScrollArea className="h-screen">
@@ -96,7 +113,10 @@ const AddProduct = () => {
           <SheetTitle className="mb-4">Add Product</SheetTitle>
           <SheetDescription asChild>
             <Form {...form}>
-              <form className="space-y-8">
+              <form
+                className="space-y-8"
+                onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
+              >
                 <FormField
                   control={form.control}
                   name="name"
@@ -106,7 +126,9 @@ const AddProduct = () => {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>Enter the name of the product.</FormDescription>
+                      <FormDescription>
+                        Enter the name of the product.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -120,7 +142,9 @@ const AddProduct = () => {
                       <FormControl>
                         <Input {...field} />
                       </FormControl>
-                      <FormDescription>Enter the short description of the product.</FormDescription>
+                      <FormDescription>
+                        Enter the short description of the product.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -134,7 +158,9 @@ const AddProduct = () => {
                       <FormControl>
                         <Textarea {...field} />
                       </FormControl>
-                      <FormDescription>Enter the description of the product.</FormDescription>
+                      <FormDescription>
+                        Enter the description of the product.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -146,38 +172,53 @@ const AddProduct = () => {
                     <FormItem>
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input
+                          type="number"
+                          {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
+                        />
                       </FormControl>
-                      <FormDescription>Enter the price of the product.</FormDescription>
+                      <FormDescription>
+                        Enter the price of the product.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Select>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {categories.map((cat) => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormDescription>Enter the category of the product.</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {data && (
+                  <FormField
+                    control={form.control}
+                    name="categorySlug"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Category</FormLabel>
+                        <FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a category" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {data.map((cat: CategoryType) => (
+                                <SelectItem key={cat.id} value={cat.slug}>
+                                  {cat.name}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </FormControl>
+                        <FormDescription>
+                          Enter the category of the product.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
                 <FormField
                   control={form.control}
                   name="sizes"
@@ -196,7 +237,9 @@ const AddProduct = () => {
                                   if (checked) {
                                     field.onChange([...currentValues, size]);
                                   } else {
-                                    field.onChange(currentValues.filter((v) => v !== size));
+                                    field.onChange(
+                                      currentValues.filter((v) => v !== size)
+                                    );
                                   }
                                 }}
                               />
@@ -207,7 +250,9 @@ const AddProduct = () => {
                           ))}
                         </div>
                       </FormControl>
-                      <FormDescription>Select the available sizes for the product.</FormDescription>
+                      <FormDescription>
+                        Select the available sizes for the product.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -222,7 +267,10 @@ const AddProduct = () => {
                         <div className="space-y-4">
                           <div className="grid grid-cols-3 gap-4 my-2">
                             {colors.map((color) => (
-                              <div className="flex items-center gap-2" key={color}>
+                              <div
+                                className="flex items-center gap-2"
+                                key={color}
+                              >
                                 <Checkbox
                                   id="color"
                                   checked={field.value?.includes(color)}
@@ -231,11 +279,16 @@ const AddProduct = () => {
                                     if (checked) {
                                       field.onChange([...currentValues, color]);
                                     } else {
-                                      field.onChange(currentValues.filter((v) => v !== color));
+                                      field.onChange(
+                                        currentValues.filter((v) => v !== color)
+                                      );
                                     }
                                   }}
                                 />
-                                <label htmlFor="color" className="text-xs flex items-center gap-2">
+                                <label
+                                  htmlFor="color"
+                                  className="text-xs flex items-center gap-2"
+                                >
                                   <div
                                     className="w-2 h-2 rounded-full"
                                     style={{ backgroundColor: color }}
@@ -251,12 +304,17 @@ const AddProduct = () => {
                                 Upload images for selected colors:
                               </p>
                               {field.value.map((color) => (
-                                <div className="flex items-center gap-2" key={color}>
+                                <div
+                                  className="flex items-center gap-2"
+                                  key={color}
+                                >
                                   <div
                                     className="w-2 h-2 rounded-full"
                                     style={{ backgroundColor: color }}
                                   />
-                                  <span className="text-sm min-w-[60px]">{color}</span>
+                                  <span className="text-sm min-w-[60px]">
+                                    {color}
+                                  </span>
                                   <Input type="file" accept="image/*" />
                                 </div>
                               ))}
@@ -271,7 +329,89 @@ const AddProduct = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Submit</Button>
+                <FormField
+                  control={form.control}
+                  name="images"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Images</FormLabel>
+                      <FormControl>
+                        <div className="">
+                          {form.watch('colors')?.map((color) => (
+                            <div
+                              className="mb-4 flex items-center gap-4"
+                              key={color}
+                            >
+                              <div className="flex items-center gap-2">
+                                <div
+                                  className="w-4 h-4 rounded-full"
+                                  style={{ backgroundColor: color }}
+                                />
+                                <span className="text-sm font-medium min-w-20">
+                                  {color}
+                                </span>
+                              </div>
+                              <Input
+                                type="file"
+                                accept="image/*"
+                                onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    try {
+                                      const formData = new FormData();
+                                      formData.append('file', file);
+                                      formData.append(
+                                        'upload_preset',
+                                        'microservices-ecommerce'
+                                      );
+
+                                      const res = await fetch(
+                                        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                                        {
+                                          method: 'POST',
+                                          body: formData,
+                                        }
+                                      );
+                                      const data = await res.json();
+
+                                      if (data.secure_url) {
+                                        const currentImages =
+                                          form.getValues('images') || {};
+                                        form.setValue('images', {
+                                          ...currentImages,
+                                          [color]: data.secure_url,
+                                        });
+                                      }
+                                    } catch (error) {
+                                      console.log(error);
+                                      toast.error('Upload failed!');
+                                    }
+                                  }
+                                }}
+                              />
+                              {field.value?.[color] ? (
+                                <span className="text-green-600 text-sm">
+                                  Image selected
+                                </span>
+                              ) : (
+                                <span className="text-red-600 text-sm">
+                                  Image required
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {mutation.isPending ? 'Subitting...' : 'Submit'}
+                </Button>
               </form>
             </Form>
           </SheetDescription>
